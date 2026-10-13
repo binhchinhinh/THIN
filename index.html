@@ -365,6 +365,27 @@
   }
   .zoom .close:hover{ background: rgba(249,241,228,.15); }
 
+  /* ===== RESPONSIVE CHO MỌI THIẾT BỊ (MOBILE, TABLET, DESKTOP) ===== */
+  @media (max-width: 480px){
+    .page{ padding: 8px 6px; }
+    .card{ border-radius: 20px; padding: 36px 14px 26px; }
+    .lang-toggle{ top: 12px; right: 12px; font-size: 11px; }
+    .lang-toggle button{ padding: 5px 12px; }
+    .book{ width: min(84%, 280px); }
+    .menu a{ padding: 13px 14px; font-size: 13px; border-radius: 10px; }
+    .social{ gap: 16px; }
+    .social .dot{ width: 42px; height: 42px; }
+    .social svg{ width: 18px; height: 18px; }
+    .album-nav{ gap: 16px; margin-top: 18px; }
+    .album-nav button{ width: 38px; height: 38px; }
+  }
+
+  @media (max-width: 360px){
+    .card{ padding: 32px 10px 22px; }
+    .book{ width: 90%; }
+    .social{ gap: 12px; }
+  }
+
   @media (prefers-reduced-motion: reduce){
     *, *::before, *::after{ animation: none !important; transition-duration: .01ms !important; }
     .reveal{ opacity:1; transform:none; }
