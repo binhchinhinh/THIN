@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 <title>THIN Beauty Atelier</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@400;500;600&display=swap');
@@ -26,6 +26,7 @@
     color: var(--ink);
     font-family: 'Jost', sans-serif;
     -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
     overflow-x: hidden;
     width: 100%;
   }
@@ -365,6 +366,27 @@
   }
   .zoom .close:hover{ background: rgba(249,241,228,.15); }
 
+  /* ===== RESPONSIVE CHO MỌI THIẾT BỊ (MOBILE, TABLET, DESKTOP) ===== */
+  @media (max-width: 480px){
+    .page{ padding: 8px 6px; }
+    .card{ border-radius: 20px; padding: 36px 14px 26px; }
+    .lang-toggle{ top: 12px; right: 12px; font-size: 11px; }
+    .lang-toggle button{ padding: 5px 12px; }
+    .book{ width: min(84%, 280px); }
+    .menu a{ padding: 13px 14px; font-size: 13px; border-radius: 10px; }
+    .social{ gap: 16px; }
+    .social .dot{ width: 42px; height: 42px; }
+    .social svg{ width: 18px; height: 18px; }
+    .album-nav{ gap: 16px; margin-top: 18px; }
+    .album-nav button{ width: 38px; height: 38px; }
+  }
+
+  @media (max-width: 360px){
+    .card{ padding: 32px 10px 22px; }
+    .book{ width: 90%; }
+    .social{ gap: 12px; }
+  }
+
   @media (prefers-reduced-motion: reduce){
     *, *::before, *::after{ animation: none !important; transition-duration: .01ms !important; }
     .reveal{ opacity:1; transform:none; }
@@ -447,7 +469,7 @@
         <span class="label-vi">ĐẶT LỊCH HẸN (ZALO)</span>
         <span class="label-en">BOOK APPOINTMENT (ZALO)</span>
       </a>
-      <a class="secondary" href="https://sites.google.com/view/baogiaothin/b%C3%A1o-gi%C3%A1">
+      <a class="secondary" href="ServiceMenu.html" target="_blank" rel="noopener">
         <span class="label-vi">BẢNG GIÁ</span>
         <span class="label-en">PRICE LIST</span>
       </a>
@@ -531,34 +553,38 @@
 
 <script>
   /* =====================================================================
-     CONFIG - CHỈ CẦN SỬA PHẦN NÀY
+     CONFIG - CẤU HÌNH ALBUM ẢNH (HOST TRÊN GITHUB)
      ===================================================================== */
   const CONFIG = {
 
-    /* 9 ẢNH CỦA ALBUM - dán địa chỉ ảnh (URL) copy từ web khác vào giữa dấu ngoặc kép "".
-       Cách lấy link nhanh trên máy tính / điện thoại:
-       1. Mở trang web có ảnh (Google Sites, Facebook, Pinterest, Postimages, Imgur, v.v.)
-       2. Nhấn chuột phải vào ảnh (hoặc nhấn giữ ảnh trên điện thoại)
-          -> chọn "Sao chép địa chỉ hình ảnh" (Copy image address)
-       3. Dán vào giữa dấu "" ở từng dòng bên dưới (ví dụ: "https://...").
-       - Hỗ trợ cả link chia sẻ ảnh từ Google Drive, Dropbox hoặc đường dẫn file nội bộ.
-       - Để "" (trống) thì trang đó hiện ô chờ "Sắp có ảnh".
-       - Nên dùng ảnh dọc tỉ lệ 3:4 để hiển thị đẹp nhất trong khung album. */
-    /* PHÓNG TO ẢNH:
+    /* PHÓNG TO ẢNH KHI CHẠM:
        false = ảnh hiện trọn vẹn, to hết cỡ theo chiều rộng màn hình (không bị cắt)
        true  = ảnh phủ kín toàn bộ màn hình điện thoại (có thể cắt bớt mép ảnh) */
     zoomFill: false,
 
+    /* ===================================================================
+       THƯ MỤC CHỨA ẢNH & THỨ TỰ TÊN ẢNH:
+       - Các ảnh được lưu trong thư mục "images/"
+       - Thứ tự ảnh được đặt tên: HA1, HA2, HA3, HA4, HA5, HA6, HA7, HA8, HA9
+       - Hỗ trợ mọi đuôi file: .jpg, .jpeg, .png, .webp (kể cả viết hoa hay viết thường)
+       - KHI ĐỔI ẢNH: Bạn chỉ cần chép ảnh mới vào folder "images/"
+         đúng tên HA1, HA2... rồi đẩy lên GitHub, KHÔNG CẦN sửa code!
+       =================================================================== */
+    imageFolder: "images/",
+    photoPrefix: "HA",
+    totalPhotos: 9,
+
+    /* Danh sách 9 ảnh tương ứng HA1 -> HA9 trong thư mục images/ */
     photos: [
-      "https://scontent.fdad1-1.fna.fbcdn.net/v/t39.30808-6/784617517_4460043554244274_9156656483202064977_n.jpg?stp=dst-jpg_tt6&cstp=mx1267x2048&ctp=s1267x2048&_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=VmOkXb0bB6kQ7kNvwFFJmUs&_nc_oc=AdpzFRlKH4ffD9Z9zcCVkD6XYuX5KZ-7FvhHcnX38fjQT7I6tvrilAZomuvaMtZIHI8&_nc_zt=23&_nc_ht=scontent.fdad1-1.fna&_nc_gid=QJww2sBTb5sdGgoc0WWVug&_nc_ss=7b2a8&oh=00_AQPpa5d4BoKsxBDaxwBWPY1x06uoHZ3QBMxaxnk3eWKyrg&oe=6AD38836",  // Ảnh 1
-      "https://scontent.fdad2-1.fna.fbcdn.net/v/t39.30808-6/808136917_4480906292158000_7401564971221549418_n.jpg?stp=dst-jpg_tt6&cstp=mx1152x2048&ctp=s1152x2048&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=vzKrH8EE-bUQ7kNvwF9S7r3&_nc_oc=AdqDVhbxSo1KUnwuxivObAy-J3dggnm-nx6WfwsDTTqwx6gZtdImthaAEodskDEjS80&_nc_zt=23&_nc_ht=scontent.fdad2-1.fna&_nc_gid=CJv1aA4r_ZXQypb99tR2WA&_nc_ss=7b2a8&oh=00_AQPwGYEojG5PtGUyViSn7hk6yjok6744tj3dgcuj5INpMg&oe=6AD37D88",  // Ảnh 2
-      "https://scontent.fdad1-4.fna.fbcdn.net/v/t39.30808-6/766320983_4442073762707920_2486076785279951612_n.jpg?stp=dst-jpg_tt6&cstp=mx1365x2048&ctp=s1365x2048&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=jmkup69z-U4Q7kNvwECz_vA&_nc_oc=Adrg-1x6mbx8R0XkOztI9BRfn-b-CPy68WO08Z782GCBaZQfMRjtMwPPImqDYATiH2s&_nc_zt=23&_nc_ht=scontent.fdad1-4.fna&_nc_gid=cBbC1pPavbdds2b1fgubvg&_nc_ss=7b2a8&oh=00_AQNTgs9SttDmzexBQ2QlPDjNYM1UAkLObaJ8PehOQSrqcA&oe=6AD36742",  // Ảnh 3
-      "https://scontent.fdad1-2.fna.fbcdn.net/v/t39.30808-6/814695665_4486565814925381_2467467857003300517_n.jpg?stp=dst-jpg_tt6&cstp=mx1290x1614&ctp=s1290x1614&_nc_cat=104&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f727a1&_nc_ohc=N1dXGSRH7gkQ7kNvwFhgsda&_nc_oc=AdpdmUtTvMZ773yOnAqotqbc-SZtG7XM5mvNu7XpBkfJwJsfnPLcYzTtYa9iflsf0oM&_nc_zt=23&_nc_ht=scontent.fdad1-2.fna&_nc_gid=mHIpzWcvJB_erGqEj-bbqA&_nc_ss=7b2a8&oh=00_AQN2s90ubPVIGNKBPi9xLjB7I9aGR646IBLromT-UvQjig&oe=6AD3908C",  // Ảnh 4
-      "https://scontent.fdad1-4.fna.fbcdn.net/v/t39.30808-6/756229018_4429580367290593_3679747896314673470_n.jpg?stp=dst-jpg_tt6&cstp=mx1152x2048&ctp=s1152x2048&_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=jhChVTxh9FIQ7kNvwEtwIYC&_nc_oc=AdpYie6fjo0HeAiDFkxtHEqiq7uA7WQvLrMRSRUSsq-IbCUKIG8l-WfsUXGbOml_M5s&_nc_zt=23&_nc_ht=scontent.fdad1-4.fna&_nc_gid=rUbVMLqUm3vyJtK4trGc8A&_nc_ss=7b2a8&oh=00_AQNl1rlAPnTid_zYP1dueDVDSPJYZ8fCQK_MZJhXsBzGHw&oe=6AD35C77",  // Ảnh 5
-      "https://scontent.fdad1-1.fna.fbcdn.net/v/t39.30808-6/747807834_4420008321581131_4687649514833161522_n.jpg?stp=dst-jpg_tt6&cstp=mx1536x2048&ctp=s1536x2048&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=Guq_KoO73awQ7kNvwFE4FlG&_nc_oc=AdqKsZTidBchx3QTAQ9M2N8F5AhUkiE3TLemE1QUc8B3YMl2kgbNlWIIQ7oJHZh0y9U&_nc_zt=23&_nc_ht=scontent.fdad1-1.fna&_nc_gid=TpUsZFeRPVwqrNYKk9Yi3g&_nc_ss=7b2a8&oh=00_AQNs8irnFjP73umPYQhChN1rPDvyZRaElK1j0OXn4KbqYg&oe=6AD36098",  // Ảnh 6
-      "https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-6/741248809_4411072565808040_6737683770500371097_n.jpg?stp=dst-jpg_tt6&cstp=mx1536x2048&ctp=s1536x2048&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f727a1&_nc_ohc=y8II8Ec0EVcQ7kNvwEVz2LU&_nc_oc=AdrIxnQNiX0bCcZamnkwdNiZmpSgybGD5ZkbytbysCfuyTzIE1jNwBNVcho48VWnJMc&_nc_zt=23&_nc_ht=scontent.fdad1-3.fna&_nc_gid=0lrpD9K8sGMer2UMq1-qXQ&_nc_ss=7b2a8&oh=00_AQOCOfgrihMZ0vdqc7xRU2CZggsK7_lmoZ1ca1gTJ27DmA&oe=6AD38CF2",  // Ảnh 7
-      "https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-6/740237289_4408713262710637_6220111112053130885_n.jpg?stp=dst-jpg_tt6&cstp=mx1364x2048&ctp=s1364x2048&_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f727a1&_nc_ohc=Y45GQLhj5DUQ7kNvwEi9mSu&_nc_oc=Adpiv0SkP41j5Sbb4O5i2aK1IlW_1OkT1usjYdcLRq-Gb5yIH1IQeCpUtNo5jZ9Nw7g&_nc_zt=23&_nc_ht=scontent.fdad1-3.fna&_nc_gid=uRJD357a1B5GPux_jp5sBA&_nc_ss=7b2a8&oh=00_AQNIX8GzArpo9HgDct-4B8J3b9QlXaeAu9XHWiVNAzz_OA&oe=6AD36548",  // Ảnh 8
-      "https://scontent.fdad1-4.fna.fbcdn.net/v/t39.30808-6/731969701_4401148390133791_4768471888195281440_n.jpg?stp=dst-jpg_tt6&cstp=mx1366x2048&ctp=s1366x2048&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f727a1&_nc_ohc=-YvGOzXrZ5IQ7kNvwH22tVR&_nc_oc=Adp07yZPVkTP3K7KAAXxaI1AfcaGfHMgR3eybve9g8VuEO2fhlZ9Y_dScWoLoVnoJ3s&_nc_zt=23&_nc_ht=scontent.fdad1-4.fna&_nc_gid=U157GKoYNH93odOBobbFfA&_nc_ss=7b2a8&oh=00_AQM8KKMJqSg_wlpoz_OaIXf-G4jYWCwZrjG_hXzrSb9lvg&oe=6AD36157"   // Ảnh 9
+      "images/HA1.jpg",  // Ảnh 1
+      "images/HA2.jpg",  // Ảnh 2
+      "images/HA3.jpg",  // Ảnh 3
+      "images/HA4.jpg",  // Ảnh 4
+      "images/HA5.jpg",  // Ảnh 5
+      "images/HA6.jpg",  // Ảnh 6
+      "images/HA7.jpg",  // Ảnh 7
+      "images/HA8.jpg",  // Ảnh 8
+      "images/HA9.jpg"   // Ảnh 9
     ]
   };
   /* ===================================================================== */
@@ -645,7 +671,7 @@
     const nextBtn = document.getElementById('album-next');
     const countEl = document.getElementById('album-count');
 
-    const PHOTOS = 9;
+    const PHOTOS = (CONFIG.photos && CONFIG.photos.length) ? CONFIG.photos.length : (CONFIG.totalPhotos || 9);
     const N = PHOTOS + 2;       // bìa trước + 9 ảnh + bìa sau
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const DUR = reduce ? 1 : 1150;
@@ -691,28 +717,53 @@
     function makePhotoSheet(n){
       const sheet = document.createElement('div');
       sheet.className = 'sheet';
-      const parsed = normalizePhotoUrl(CONFIG.photos[n - 1]);
-      const url = parsed.src;
       const frame = document.createElement('button');
       frame.type = 'button';
       frame.className = 'frame';
       frame.setAttribute('aria-label', 'Ảnh ' + n);
       frame.innerHTML = '<div class="empty">' + cameraIcon + '<span>Sắp có ảnh</span></div>';
-      if (url){
+
+      const raw = (CONFIG.photos && CONFIG.photos[n - 1]) || ((CONFIG.imageFolder || 'images/') + (CONFIG.photoPrefix || 'HA') + n + '.jpg');
+      const parsed = normalizePhotoUrl(raw);
+      const url = parsed.src;
+
+      // Danh sách các đường dẫn dự phòng để thử
+      const candidates = [];
+      if (url) candidates.push(url);
+
+      // Nếu là ảnh nội bộ (images/HA...), tự động sinh các đuôi file phổ biến (.jpg, .png, .jpeg, .webp, hoa/thường)
+      if (url && !/^(https?:|\/\/|data:)/i.test(url)){
+        const folder = (CONFIG.imageFolder || 'images/').replace(/\/?$/, '/');
+        const prefix = CONFIG.photoPrefix || 'HA';
+        const base = folder + prefix + n;
+        const exts = ['.jpg', '.jpeg', '.png', '.webp', '.JPG', '.JPEG', '.PNG', '.WEBP'];
+        exts.forEach(function(ext){
+          const p = base + ext;
+          if (candidates.indexOf(p) === -1) candidates.push(p);
+        });
+      }
+
+      if (candidates.length > 0){
+        let candIdx = 0;
         const img = new Image();
         img.alt = 'Bộ sưu tập THIN Makeup - ảnh ' + n;
         img.draggable = false;
-        img.referrerPolicy = 'no-referrer';   // tránh bị chặn khi lấy link ảnh từ trang web khác
+        img.referrerPolicy = 'no-referrer';
         img.decoding = 'async';
         img.onload = function(){ frame.classList.add('filled'); };
         img.onerror = function(){
           if (parsed.fallback && img.src !== parsed.fallback){
             img.src = parsed.fallback;
+            return;
+          }
+          candIdx++;
+          if (candIdx < candidates.length){
+            img.src = candidates[candIdx];
           } else {
             img.remove();
           }
         };
-        img.src = url;
+        img.src = candidates[0];
         frame.prepend(img);
         frame.addEventListener('click', function(e){
           if (!frame.classList.contains('filled')) return;

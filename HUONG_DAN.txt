@@ -1,0 +1,23 @@
+THƯ MỤC CHỨA ẢNH ALBUM (PORTFOLIO) - THIN BEAUTY ATELIER
+===========================================================
+
+1. CÁCH ĐẶT TÊN ẢNH THEO THỨ TỰ:
+   - Ảnh 1: HA1.jpg  (hoặc HA1.png, HA1.jpeg, HA1.webp)
+   - Ảnh 2: HA2.jpg
+   - Ảnh 3: HA3.jpg
+   - Ảnh 4: HA4.jpg
+   - Ảnh 5: HA5.jpg
+   - Ảnh 6: HA6.jpg
+   - Ảnh 7: HA7.jpg
+   - Ảnh 8: HA8.jpg
+   - Ảnh 9: HA9.jpg
+
+2. KHI MUỐN THAY ĐỔI ẢNH:
+   - Bạn chỉ cần copy ảnh mới vào thư mục `images` này.
+   - Đặt lại tên thành HA1, HA2, HA3... theo thứ tự bạn muốn.
+   - Hệ thống tự động nhận các đuôi ảnh: .jpg, .jpeg, .png, .webp (kể cả viết hoa hay viết thường).
+   - Đẩy (push/upload) thư mục này lên GitHub cùng file index.html là trang web tự cập nhật, KHÔNG CẦN sửa code!
+
+3. LƯU Ý ĐỂ ẢNH ĐẸP NHẤT:
+   - Nên chọn ảnh đứng / dọc (tỉ lệ 3:4 hoặc 9:16) để ảnh vừa vặn và đẹp nhất trong khung sổ lật của album.
+   - Nếu bạn có ít hơn 9 ảnh (ví dụ 6 ảnh: HA1 đến HA6), các trang sau (HA7, HA8, HA9) sẽ hiển thị khung chờ "Sắp có ảnh".
