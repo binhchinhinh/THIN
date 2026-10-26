@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -911,6 +911,232 @@
       setTimeout(autoOpen, 1800);
     }
   })();
+</script>
+
+
+<!-- =====================================================================
+     CHATBOT TƯ VẤN THIN BEAUTY ATELIER
+     ===================================================================== -->
+<style>
+  .tc-launcher{
+    position:fixed; right:18px; bottom:20px; z-index:9998;
+    display:flex; align-items:center; gap:10px;
+    background:#3e2c22; color:#f9f1e4; border:1px solid #b08a5a;
+    border-radius:999px; padding:10px 18px 10px 12px; cursor:pointer;
+    font-family:'Jost',sans-serif; font-size:13px; letter-spacing:.08em;
+    box-shadow:0 12px 30px rgba(62,44,34,.35);
+    transition:transform .3s cubic-bezier(.22,.7,.2,1), opacity .3s;
+  }
+  .tc-launcher:hover{ transform:translateY(-2px); }
+  .tc-launcher .tc-dot{
+    width:34px; height:34px; border-radius:50%;
+    background:#f9f1e4; color:#3e2c22; display:flex; align-items:center; justify-content:center;
+    font-family:'Cormorant Garamond',serif; font-weight:600; font-size:17px; letter-spacing:0;
+  }
+  .tc-launcher.hide{ opacity:0; pointer-events:none; transform:translateY(10px); }
+
+  .tc-panel{
+    position:fixed; right:18px; bottom:20px; z-index:9999;
+    width:min(380px, calc(100vw - 24px)); height:min(600px, calc(100vh - 36px));
+    background:#fdf8ef; border:1px solid #ddccb2; border-radius:22px;
+    box-shadow:0 30px 70px rgba(62,44,34,.35);
+    display:flex; flex-direction:column; overflow:hidden;
+    opacity:0; pointer-events:none; transform:translateY(16px) scale(.98);
+    transition:opacity .35s cubic-bezier(.22,.7,.2,1), transform .35s cubic-bezier(.22,.7,.2,1);
+    font-family:'Jost',sans-serif; color:#3e2c22;
+  }
+  .tc-panel.open{ opacity:1; pointer-events:auto; transform:none; }
+
+  @media (max-width:680px){
+    .tc-launcher{
+      right:16px; bottom:20px;
+      padding:0; width:50px; height:50px; border-radius:50%;
+      justify-content:center;
+      box-shadow:0 10px 26px rgba(62,44,34,.45);
+    }
+    .tc-launcher .tc-dot{
+      width:50px; height:50px; border-radius:50%;
+      background:#3e2c22; color:#e8d5b0; border:1px solid #b08a5a;
+      font-size:22px;
+    }
+    .tc-launcher .tc-txt{ display:none; }
+    .tc-panel{ right:0; bottom:0; width:100vw; height:100dvh; border-radius:0; border:none; }
+  }
+
+  .tc-head{
+    background:#3e2c22; color:#f9f1e4; padding:16px 18px;
+    display:flex; align-items:center; gap:12px; border-bottom:1px solid #b08a5a;
+  }
+  .tc-head .tc-avatar{
+    width:40px; height:40px; border-radius:50%; border:1px solid #b08a5a;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; color:#e8d5b0;
+  }
+  .tc-head .tc-title{ flex:1; line-height:1.25; }
+  .tc-head .tc-title b{ font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:600; letter-spacing:.06em; display:block; }
+  .tc-head .tc-title span{ font-size:11px; color:#d8c6a4; letter-spacing:.05em; }
+  .tc-head .tc-title span::before{ content:""; display:inline-block; width:7px; height:7px; border-radius:50%; background:#8fbf8a; margin-right:6px; vertical-align:middle; }
+  .tc-close{ background:none; border:none; color:#f9f1e4; font-size:22px; cursor:pointer; padding:4px 8px; line-height:1; }
+
+  .tc-body{ flex:1; overflow-y:auto; padding:18px 16px 8px; display:flex; flex-direction:column; gap:10px;
+    background:linear-gradient(180deg,#fdf8ef,#f9f1e4); }
+  .tc-msg{ max-width:84%; padding:10px 14px; font-size:14px; line-height:1.55; white-space:pre-wrap; word-wrap:break-word;
+    animation:tcIn .35s cubic-bezier(.22,.7,.2,1); }
+  @keyframes tcIn{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:none; } }
+  .tc-msg.bot{ align-self:flex-start; background:#fff; border:1px solid #ecdfc8; border-radius:4px 16px 16px 16px; }
+  .tc-msg.user{ align-self:flex-end; background:#3e2c22; color:#f9f1e4; border-radius:16px 4px 16px 16px; }
+  .tc-msg.err{ align-self:flex-start; background:#f6e9e2; border:1px solid #e0c3b4; border-radius:12px; font-size:13px; }
+  .tc-msg a{ color:inherit; font-weight:600; }
+  .tc-booked{
+    align-self:stretch; text-align:center; border:1px solid #b08a5a; border-radius:14px;
+    padding:12px; background:#f4ebd9; font-family:'Cormorant Garamond',serif; font-size:16px; font-style:italic;
+  }
+  .tc-typing{ align-self:flex-start; display:flex; gap:4px; padding:12px 14px; background:#fff; border:1px solid #ecdfc8; border-radius:4px 16px 16px 16px; }
+  .tc-typing i{ width:6px; height:6px; border-radius:50%; background:#b08a5a; animation:tcDot 1.2s infinite; }
+  .tc-typing i:nth-child(2){ animation-delay:.15s; } .tc-typing i:nth-child(3){ animation-delay:.3s; }
+  @keyframes tcDot{ 0%,60%,100%{ opacity:.3; transform:none;} 30%{ opacity:1; transform:translateY(-3px);} }
+
+  .tc-chips{ display:flex; flex-wrap:wrap; gap:6px; padding:4px 16px 10px; }
+  .tc-chip{ border:1px solid #c9b08a; background:transparent; color:#3e2c22; border-radius:999px;
+    padding:6px 12px; font-family:inherit; font-size:12px; cursor:pointer; transition:background .25s; }
+  .tc-chip:hover{ background:#f0e4cf; }
+
+  .tc-form{ display:flex; gap:8px; padding:12px; border-top:1px solid #ecdfc8; background:#fdf8ef; }
+  .tc-form textarea{ flex:1; resize:none; border:1px solid #ddccb2; border-radius:14px; padding:10px 12px;
+    font-family:inherit; font-size:14px; color:#3e2c22; background:#fff; max-height:110px; outline:none; }
+  .tc-form textarea:focus{ border-color:#b08a5a; }
+  .tc-form button{ width:44px; border:none; border-radius:14px; background:#3e2c22; color:#f9f1e4; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .tc-form button:disabled{ opacity:.45; cursor:default; }
+  .tc-foot{ text-align:center; font-size:10px; color:#8a7560; letter-spacing:.08em; padding:0 0 8px; background:#fdf8ef; }
+</style>
+
+<button type="button" class="tc-launcher" id="tc-launcher" aria-label="T&#430; v&#7845;n v&agrave; &#273;&#7862;t l&#7882;ch">
+  <span class="tc-dot">T</span><span class="tc-txt">T&#431; V&#7844;N &amp; &#272;&#7862;T L&#7882;CH</span>
+</button>
+
+<div class="tc-panel" id="tc-panel" role="dialog" aria-label="Tư vấn THIN Beauty Atelier">
+  <div class="tc-head">
+    <div class="tc-avatar">T</div>
+    <div class="tc-title"><b>THIN Atelier</b><span>C&#7889; v&#7845;n t&#7841;o h&igrave;nh &middot; Tr&#7921;c tuy&#7871;n</span></div>
+    <button type="button" class="tc-close" id="tc-close" aria-label="&#272;&oacute;ng">&times;</button>
+  </div>
+  <div class="tc-body" id="tc-body"></div>
+  <div class="tc-chips" id="tc-chips"></div>
+  <form class="tc-form" id="tc-form">
+    <textarea id="tc-input" rows="1" placeholder="Nh&#7853;p c&acirc;u h&#788prom;i c&#7911;a b&#7841;n&hellip;"></textarea>
+    <button type="submit" id="tc-send" aria-label="Gửi">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+    </button>
+  </form>
+  <div class="tc-foot">THIN BEAUTY ATELIER &middot; &#272;&Agrave; N&#7844;NG</div>
+</div>
+
+<script>
+(function(){
+  const CHAT_ENDPOINT = "https://script.google.com/macros/s/AKfycbx1AJ6EX3qan7hDBn20BaIFEjyMWGzWic_BcN4QCmSVXEJc9hEvofUt7eepEyBMV0zKcg/exec";
+  const ZALO = "https://zalo.me/0388123050";
+  const WELCOME = "K\u00ednh ch\u00e0o Qu\u00fd kh\u00e1ch, em l\u00e0 C\u1ed1 v\u1ea5n t\u1ea1o h\u00ecnh c\u1ee7a THIN Beauty Atelier.\nQu\u00fd kh\u00e1ch \u0111ang chu\u1ea9n b\u1ecb cho d\u1ecbp \u0111\u1eb7c bi\u1ec7t n\u00e0o \u0111\u1ec3 em \u0111\u01b0\u1ee3c t\u01b0 v\u1ea5n phong c\u00e1ch ph\u00f9 h\u1ee3p nh\u1ea5t \u1ea1?";
+  const CHIPS = [
+    "T\u01b0 v\u1ea5n makeup d\u1ef1 ti\u1ec7c",
+    "B\u1ea3ng gi\u00e1 trang \u0111i\u1ec3m c\u00f4 d\u00e2u",
+    "Kh\u00f3a h\u1ecdc makeup c\u00e1 nh\u00e2n",
+    "T\u00f4i mu\u1ed1n \u0111\u1eb7t l\u1ecbch"
+  ];
+  const STORE = "thin_chat_v1";
+
+  const $ = id => document.getElementById(id);
+  const launcher = $('tc-launcher'), panel = $('tc-panel'), body = $('tc-body');
+  const chips = $('tc-chips'), form = $('tc-form'), input = $('tc-input'), send = $('tc-send');
+    "T\u01b0 v\u1ea5n makeup d\u1ef1 ti\u1ec7c",
+    "B\u1ea3ng gi\u00e1 trang \u0111i\u1ec3m c\u00f4 d\u00e2u",
+    "Kh\u00f3a h\u1ecdc makeup c\u00e1 nh\u00e2n",
+    "T\u00f4i mu\u1ed1n \u0111\u1eb7t l\u1ecbch"
+
+  function esc(s){ return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function fmt(s){ return esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/^\s*[\*\-]\s+/gm, '• '); }
+
+  function add(role, text, cls){
+    const d = document.createElement('div');
+    d.className = 'tc-msg ' + (cls || (role === 'user' ? 'user' : 'bot'));
+    d.innerHTML = cls === 'err' ? text : fmt(text);
+    body.appendChild(d);
+    body.scrollTop = body.scrollHeight;
+  }
+  function booked(){
+    const d = document.createElement('div');
+    d.className = 'tc-booked';
+    d.textContent = '✦ Lịch hẹn đã được ghi nhận — THIN sẽ liên hệ xác nhận với Quý khách ✦';
+    body.appendChild(d);
+    body.scrollTop = body.scrollHeight;
+  }
+  function renderChips(){
+    chips.innerHTML = '';
+    if (history.length > 0) return;
+    CHIPS.forEach(t => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'tc-chip'; b.textContent = t;
+      b.onclick = () => ask(t);
+      chips.appendChild(b);
+    });
+  }
+  function render(){
+    body.innerHTML = '';
+    add('assistant', WELCOME);
+    history.forEach(m => add(m.role, m.content));
+    renderChips();
+  }
+  function save(){ try { sessionStorage.setItem(STORE, JSON.stringify(history.slice(-30))); } catch(e){} }
+
+  async function ask(text){
+    text = (text || '').trim();
+    if (!text || busy) return;
+    busy = true; send.disabled = true;
+    history.push({ role:'user', content:text });
+    add('user', text); input.value = ''; autosize(); chips.innerHTML = ''; save();
+
+    const typing = document.createElement('div');
+    typing.className = 'tc-typing'; typing.innerHTML = '<i></i><i></i><i></i>';
+    body.appendChild(typing); body.scrollTop = body.scrollHeight;
+
+    try {
+      const res = await fetch(CHAT_ENDPOINT, {
+        method:'POST',
+        body: JSON.stringify({ action:'chat', messages: history })
+      });
+      const data = await res.json();
+      typing.remove();
+      if (data.status === 'success' && data.reply){
+        history.push({ role:'assistant', content:data.reply });
+        add('assistant', data.reply); save();
+        if (data.booked) booked();
+      } else {
+        throw new Error(data.error || data.message || 'Lỗi');
+      }
+    } catch(err){
+      typing.remove();
+      history.pop(); save();
+      console.warn('THIN chatbot:', err);
+      add('assistant', 'Xin lỗi Quý khách, đường truyền đang gián đoạn. Quý khách vui lòng thử lại sau giây lát, hoặc nhắn trực tiếp cho THIN qua <a href="' + ZALO + '" target="_blank" rel="noopener">Zalo 0388 123 050</a> ạ.', 'err');
+    } finally {
+      busy = false; send.disabled = false; input.focus();
+    }
+  }
+
+  function autosize(){ input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 110) + 'px'; }
+  input.addEventListener('input', autosize);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); ask(input.value); }
+  });
+  form.addEventListener('submit', e => { e.preventDefault(); ask(input.value); });
+
+  function open(){ panel.classList.add('open'); launcher.classList.add('hide'); setTimeout(() => input.focus(), 300); body.scrollTop = body.scrollHeight; }
+  function close(){ panel.classList.remove('open'); launcher.classList.remove('hide'); }
+  launcher.addEventListener('click', open);
+  $('tc-close').addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && panel.classList.contains('open')) close(); });
+
+  render();
+})();
 </script>
 
 </body>
