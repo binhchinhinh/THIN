@@ -1023,7 +1023,7 @@
   <div class="tc-body" id="tc-body"></div>
   <div class="tc-chips" id="tc-chips"></div>
   <form class="tc-form" id="tc-form">
-    <textarea id="tc-input" rows="1" placeholder="Nh&#7853;p c&acirc;u h&#788prom;i c&#7911;a b&#7841;n&hellip;"></textarea>
+    <textarea id="tc-input" rows="1" placeholder="Nh&#7853;p c&acirc;u h&#7887;i c&#7911;a b&#7841;n&hellip;"></textarea>
     <button type="submit" id="tc-send" aria-label="Gửi">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
     </button>
@@ -1047,10 +1047,10 @@
   const $ = id => document.getElementById(id);
   const launcher = $('tc-launcher'), panel = $('tc-panel'), body = $('tc-body');
   const chips = $('tc-chips'), form = $('tc-form'), input = $('tc-input'), send = $('tc-send');
-    "T\u01b0 v\u1ea5n makeup d\u1ef1 ti\u1ec7c",
-    "B\u1ea3ng gi\u00e1 trang \u0111i\u1ec3m c\u00f4 d\u00e2u",
-    "Kh\u00f3a h\u1ecdc makeup c\u00e1 nh\u00e2n",
-    "T\u00f4i mu\u1ed1n \u0111\u1eb7t l\u1ecbch"
+
+  let history = [];
+  try { history = JSON.parse(sessionStorage.getItem(STORE)) || []; } catch(e){ history = []; }
+  let busy = false;
 
   function esc(s){ return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function fmt(s){ return esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/^\s*[\*\-]\s+/gm, '• '); }
