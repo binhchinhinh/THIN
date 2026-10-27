@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -937,6 +937,16 @@
   .tc-launcher .tc-dot img{ width:100%; height:100%; object-fit:contain; display:block;
   }
   .tc-launcher.hide{ opacity:0; pointer-events:none; transform:translateY(10px); }
+  .tc-badge{
+    position:absolute; top:-4px; right:-4px;
+    background:#b08a5a; color:#fff; font-size:11px; font-weight:700;
+    width:19px; height:19px; border-radius:50%;
+    display:none; align-items:center; justify-content:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.35);
+    animation:tcPulse 2s infinite;
+  }
+  .tc-badge.show{ display:flex; }
+  @keyframes tcPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.15); } }
 
   .tc-panel{
     position:fixed; right:18px; bottom:20px; z-index:9999;
@@ -1017,6 +1027,7 @@
 
 <button type="button" class="tc-launcher" id="tc-launcher" aria-label="T&#430; v&#7845;n v&agrave; &#273;&#7862;t l&#7882;ch">
   <span class="tc-dot"><img id="tc-dot-logo" alt="THIN"></span><span class="tc-txt">T&#431; V&#7844;N &amp; &#272;&#7862;T L&#7882;CH</span>
+  <span class="tc-badge" id="tc-badge">1</span>
 </button>
 
 <div class="tc-panel" id="tc-panel" role="dialog" aria-label="Tư vấn THIN Beauty Atelier">
@@ -1088,11 +1099,53 @@
       chips.appendChild(b);
     });
   }
-  function render(){
-    body.innerHTML = '';
-    add('assistant', WELCOME);
-    history.forEach(m => add(m.role, m.content));
-    renderChips();
+  const AUTO_OPEN_DELAY = 3500; // Tự động liên hệ sau 3.5 giây khi vào trang
+  const badge = $('tc-badge');
+  let userClosedManually = false;
+  let autoTimer = null;
+  let greeted = false;
+
+  function playChime(){
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      if (ctx.state === 'suspended') return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(784, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1046.5, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.45);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.45);
+    } catch(e) {}
+  }
+
+  function showGreeting(animated){
+    if (greeted) return;
+    greeted = true;
+    if (animated && history.length === 0){
+      const typing = document.createElement('div');
+      typing.className = 'tc-typing';
+      typing.innerHTML = '<i></i><i></i><i></i>';
+      body.appendChild(typing);
+      body.scrollTop = body.scrollHeight;
+      setTimeout(() => {
+        typing.remove();
+        add('assistant', WELCOME);
+        renderChips();
+        playChime();
+      }, 650);
+    } else {
+      body.innerHTML = '';
+      add('assistant', WELCOME);
+      history.forEach(m => add(m.role, m.content));
+      renderChips();
+    }
   }
   function save(){ try { sessionStorage.setItem(STORE, JSON.stringify(history.slice(-30))); } catch(e){} }
 
@@ -1138,14 +1191,48 @@
   });
   form.addEventListener('submit', e => { e.preventDefault(); ask(input.value); });
 
-  function open(){ panel.classList.add('open'); launcher.classList.add('hide'); setTimeout(() => input.focus(), 300); body.scrollTop = body.scrollHeight; }
-  function close(){ panel.classList.remove('open'); launcher.classList.remove('hide'); }
-  launcher.addEventListener('click', open);
+  function open(opts){
+    opts = opts || {};
+    if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+    if (badge) badge.classList.remove('show');
+    panel.classList.add('open');
+    launcher.classList.add('hide');
+
+    showGreeting(true);
+
+    const isMobile = window.innerWidth <= 680;
+    if (!opts.auto || !isMobile) {
+      setTimeout(() => input.focus(), 300);
+    }
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function close(){
+    userClosedManually = true;
+    if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+    panel.classList.remove('open');
+    launcher.classList.remove('hide');
+    if (greeted && badge) {
+      badge.classList.add('show');
+    }
+  }
+
+  launcher.addEventListener('click', () => open({ auto: false }));
   $('tc-close').addEventListener('click', close);
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && panel.classList.contains('open')) close(); });
 
-  if (location.hash === '#open-chat' || location.search.indexOf('chat=open') !== -1) open();
-  render();
+  if (location.hash === '#open-chat' || location.search.indexOf('chat=open') !== -1) {
+    open({ auto: false });
+  } else if (history.length > 0) {
+    showGreeting(false);
+  }
+
+  // Tự động liên hệ chào hỏi sau 3.5 giây khi vào trang
+  autoTimer = setTimeout(() => {
+    if (!userClosedManually && !panel.classList.contains('open')) {
+      open({ auto: true });
+    }
+  }, AUTO_OPEN_DELAY);
 })();
 </script>
 
